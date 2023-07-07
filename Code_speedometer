@@ -1,0 +1,44 @@
+import math
+ 
+# Constants
+DIAMETER_FULL = 29
+DIAMETER_COMPACT = 25
+REVOLUTIONS_PER_MILE = 5280 / (math.pi * DIAMETER_FULL)
+ERRORS = [-0.1, -0.05, -0.01, 0.01, 0.05, 0.1]
+VELOCITIES = [50, 60, 70, 80, 90]
+ 
+# Function to calculate actual speed given speedometer reading and error
+def actual_speed(speedometer, error, diameter):
+    rev_per_mile = 5280 / (math.pi * diameter)
+    actual_revs_per_mile = rev_per_mile / (1 - error)
+    actual_speed = speedometer * actual_revs_per_mile / REVOLUTIONS_PER_MILE
+    return actual_speed
+ 
+# Print seconds between mileposts for speeds 10 to 80 mph
+print("Seconds between mileposts:")
+for velocity in range(10, 81, 10):
+    time_per_mile = 3600 / velocity
+    print(f"Speed: {velocity} mph\tInterval: {round(time_per_mile)} sec")
+ 
+# Print number of revolutions per mile and per second for two tire sizes
+print("\nRevolutions per mile:")
+print(f"Full-sized tire: {round(REVOLUTIONS_PER_MILE)}")
+rev_per_mile = 5280 / (math.pi * DIAMETER_COMPACT)
+print(f"Compact tire: {round(rev_per_mile)}")
+ 
+print("\nRevolutions per second:")
+for velocity in [30, 50, 70, 90]:
+    rev_per_sec = velocity * REVOLUTIONS_PER_MILE / 3600
+    print(f"Full-sized tire at {velocity} mph: {round(rev_per_sec)}")
+    rev_per_sec = velocity * rev_per_mile / 3600
+    print(f"Compact tire at {velocity} mph: {round(rev_per_sec)}")
+ 
+# Print actual speeds given speedometer reading and error
+print("\nActual speed:")
+for diameter, tire_type in [(DIAMETER_FULL, "Full-sized"), (DIAMETER_COMPACT, "Compact")]:
+    for error in ERRORS:
+        print(f"{tire_type} tire with {error * 100}% error:")
+        for velocity in VELOCITIES:
+            actual = actual_speed(velocity, error, diameter)
+            print(f"Speedometer reading {velocity} mph: {round(actual, 1)} mph")
+Success #stdin #stdout 0.03s 9768KB
